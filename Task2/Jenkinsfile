@@ -4,7 +4,21 @@ pipeline {
     }
     agent any
     stages {
-        stage("Run Script") {
+        stage("Build MySQL") {
+            steps {
+                dir("Task2") {
+                    sh "docker build -t trio-task-mysql:5.7 db"
+                }
+            }
+        }
+        stage("Build Flask App") {
+            steps {
+                dir("Task2") {
+                    sh "docker build -t trio-task-flask-app:latest flask-app"
+                }
+            }
+        }
+        stage("Deploy Containers") {
             steps {
                 dir("Task2") {
                     sh "sh deploy.sh"
