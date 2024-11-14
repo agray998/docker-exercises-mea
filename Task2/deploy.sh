@@ -1,5 +1,5 @@
 #!/bin/bash
-docker rm -f $(docker ps -qa)
+docker rm -f $(docker ps -qa) || sleep 1
 docker network create trio-task-network || sleep 1
 docker volume create new-volume || sleep 1
 docker build -t trio-task-mysql:5.7 db
