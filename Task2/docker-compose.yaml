@@ -1,0 +1,38 @@
+services:
+  mysql:
+    image: agray998/trio-task-mysql:5.7
+    build: ./db
+    networks:
+      - trio-task-network
+    volumes:
+      - type: volume
+        source: new-volume
+        target: /var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+  flask-app:
+    image: agray998/trio-task-flask-app:latest
+    build: ./flask-app
+    networks:
+      - trio-task-network
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    deploy:
+      replicas: 3
+  nginx:
+    image: nginx:alpine
+    volumes:
+      - type: bind
+        source: ./nginx/nginx.conf
+        target: /etc/nginx/nginx.conf
+    ports:
+      - target: 80
+        published: 8080
+    networks:
+      - trio-task-network
+
+networks:
+  trio-task-network:
+
+volumes:
+  new-volume:
